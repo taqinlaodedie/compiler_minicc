@@ -35,11 +35,11 @@ extern int yydebug;
 LETTRE          [a-zA-Z]
 /* A completer ; fausses definitions pour que lex ne fasse pas d'erreur */
 CHIFFRE         [0-9]
-IDF             {LETTRE}({LETTRE}|{CHIFFRE}|'_')*
+IDF             {LETTRE}({LETTRE}|{CHIFFRE}|"_")*
 ENTIER          {CHIFFRE}*
-CAR             {LETTRE}|{ENTIER}|.
-CHAINE          "\""({CAR}|"\n")*"\""
-COMMENTAIRE     "//"({CAR})*
+CAR             ([0x20-0x21]|[0x23-0x5b]|[0x5d-0x79])
+CHAINE          "'"({IDF}|"\n")*"'"
+COMMENTAIRE     "//".*$
 %%
 
 "void"          return TOK_VOID;
@@ -90,7 +90,14 @@ COMMENTAIRE     "//"({CAR})*
 
 {ENTIER} {
                 /* A completer : affecter yylval.intval et faire des verifications */     
-                yylval.intval = atoi(yytext);           
+                if(strlen(yytext) < 10){}
+                else {
+                	if(strcmp("4294967295", yytext) >= 0){}
+                	else{
+                		fprintf(stderr, "Error line %d: to large int\n", yylineno);
+                	}
+                }           
+                yylval.intval = atoi(yytext);
                 return TOK_INTVAL;
 }
 
@@ -129,9 +136,9 @@ int main(int argc, char ** argv) {
     
     yyin = fopen(infile, "r");
     yyparse(&program_root);
-    dump_tree(program_root, "out.dot");
     fclose(yyin);
     analyse_tree(program_root);
+    //dump_tree(program_root, "out.dot");
 
     yylex_destroy();
     return 0;

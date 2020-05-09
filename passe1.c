@@ -202,6 +202,11 @@ void check_NODE_DECL(node_t node) {
 
 // Tas et offset de main
 void check_NODE_FUNC(node_t node){
+	node_type type = node->opr[0]->type;
+	if(type != TYPE_VOID){
+		sprintf(error_msg, "main() type mistmatch");
+		yyerror(&node, error_msg);
+	} 
   node->offset = get_env_current_offset();
   node->stack_size = node->offset + get_temporary_max_offset();
 }
