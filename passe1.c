@@ -269,12 +269,6 @@ void check_NODE_IDENT(node_t node) {
   }
 }
 
-
-/*
-* @summary:  Check if operands are of the same type
-* @param[in]: node_t of nature NODE_PLUS, NODE_MINUS...
-* @return: nothing
-*/
 void check_arithOpr_b(node_t node){
   if(node->opr[0]->type !=TYPE_INT || node->opr[1]->type !=TYPE_INT) {
     sprintf(error_msg, "Arithmetic operators type error.");
@@ -282,11 +276,6 @@ void check_arithOpr_b(node_t node){
   }
 }
 
-/*
-* @summary: Check if opera are of the same type
-* @param[in]: node_t of nature NODE_NOT...
-* @return: nothing
-*/
 void check_logicalOpr_b(node_t node) {
   bool check=false;
   switch(node->opr[0]->type){
@@ -307,7 +296,6 @@ void check_logicalOpr_b(node_t node) {
   }
 }
 
-
 void check_arithOpr_u(node_t node) {
   if(node->opr[0]->type!= TYPE_INT){
     sprintf(error_msg, "Operator type error.");
@@ -322,11 +310,7 @@ void check_logicalOpr_u(node_t node) {
   }
 }
 
-/*
-* @summary:  Check if type in both sides of the equal are the same
-* @param[in]: node_t of nature NODE_AFFECT
-* @return: nothing
-*/
+
 void check_NODE_AFFECT(node_t node) {
   if(node->opr[1]->nature!=NODE_AFFECT) {
     if(node->opr[0]->type!=node->opr[1]->type) {

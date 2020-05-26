@@ -37,7 +37,8 @@ LETTRE          [a-zA-Z]
 CHIFFRE         [0-9]
 IDF             {LETTRE}({LETTRE}|{CHIFFRE}|"_")*
 ENTIER          {CHIFFRE}*
-CHAINE          '"'({IDF}|"\n")*'"'
+CHAINE          \"(\\.|[^"\\])*\"
+
 COMMENTAIRE     "//".*$
 %%
 
