@@ -38,7 +38,7 @@ static void asm_switch_logicalOpr(node_t node, int32_t num_reg_1, int32_t num_re
 static void asm_global_local(node_t node, int32_t num_reg_1, int s);
 static void asm_condition_instruction();
 
-// Generer du code asm
+//generer du code asm
 void asm_gen(node_t node) {
   if (node) {
     switch (node->nature) {
@@ -198,7 +198,7 @@ void asm_gen(node_t node) {
   }
 }
 
-// Tete du programme main
+//tete du programme main
 void asm_NODE_FUNC(node_t node){
   int nb = get_global_strings_number();
 
@@ -211,14 +211,14 @@ void asm_NODE_FUNC(node_t node){
   create_addiu_inst(29, 29,-node->offset);
 }
 
-// Sortir du programme
+//sortir du programme
 void asm_exit(node_t node){
   create_addiu_inst(29, 29, node->opr[1]->offset);
   create_ori_inst(2, r0, 10);
   create_syscall_inst();
 }
 
-// Declarations
+//declarations
 void asm_NODE_DECL(node_t node, int s) {
   if(!s) {
     if (node->opr[0]->global_decl) {
@@ -260,7 +260,7 @@ void asm_NODE_DECL(node_t node, int s) {
   }
 }
 
-// Parcours l'arbre
+//parcours l'arbre
 void asm_search_tree(node_t node) {
   if(node->nops > 0 && node->nature != NODE_IDENT) {
     for(int i = 0; i < node->nops; i++) {
@@ -394,7 +394,7 @@ void asm_NODE_AFFECT(node_t node,int s) {
     }
   }
 
-  if(s == 1) {
+  else {
     if(node->opr[1]->nature != NODE_IDENT 
       && node->opr[1]->nature != NODE_INTVAL 
       && node->opr[1]->nature != NODE_BOOLVAL){
@@ -412,15 +412,15 @@ void asm_NODE_AFFECT(node_t node,int s) {
   }
 }
 
-void asm_NODE_arithOpr(node_t node,int s){
+void asm_NODE_arithOpr(node_t node,int s) {
   int32_t num_reg_1;
   int32_t num_reg_2;
-  if(s==0){
+  if(s == 0) {
     //ident+int ident+ident int+ident int+int
-    if(node->opr[0]->nature == NODE_IDENT){
-      num_reg_1=get_current_reg();
+    if(node->opr[0]->nature == NODE_IDENT) {
+      num_reg_1 = get_current_reg();
 
-      if(node->opr[1]->nature==NODE_IDENT){
+      if(node->opr[1]->nature == NODE_IDENT) {
         //ident+ident
         //si var est global
         asm_global_local(node, num_reg_1, 0);
@@ -431,7 +431,7 @@ void asm_NODE_arithOpr(node_t node,int s){
         asm_switch_arithOpr(node, num_reg_1, num_reg_2);
       }
 
-      else if(node->opr[1]->nature==NODE_INTVAL){
+      else if(node->opr[1]->nature == NODE_INTVAL) {
         //ident+int
         asm_global_local(node, num_reg_1, 0);
         allocate_reg();
@@ -441,25 +441,25 @@ void asm_NODE_arithOpr(node_t node,int s){
         asm_switch_arithOpr(node, num_reg_1, num_reg_2);
       }
     }
-    else if(node->opr[0]->nature==NODE_INTVAL){
-      num_reg_1=get_current_reg();
-      if(node->opr[1]->nature==NODE_IDENT){
+    else if(node->opr[0]->nature == NODE_INTVAL) {
+      num_reg_1 = get_current_reg();
+      if(node->opr[1]->nature == NODE_IDENT){
         //int+ident
         create_ori_inst(num_reg_1,0, node->opr[0]->value);
         //reg_available()
         allocate_reg();
-        num_reg_2=get_current_reg();
+        num_reg_2 = get_current_reg();
         release_reg();
         //si var est global
         asm_global_local(node, num_reg_2, 1);
         asm_switch_arithOpr(node, num_reg_1, num_reg_2);
       }
-      else if(node->opr[1]->nature==NODE_INTVAL){
+      else if(node->opr[1]->nature == NODE_INTVAL) {
         //int+int
         create_ori_inst(num_reg_1,0, node->opr[0]->value);
         //reg_available()
         allocate_reg();
-        num_reg_2=get_current_reg();
+        num_reg_2 = get_current_reg();
         create_ori_inst(num_reg_2,0, node->opr[1]->value);
         release_reg();
         asm_switch_arithOpr(node, num_reg_1, num_reg_2);
@@ -467,11 +467,11 @@ void asm_NODE_arithOpr(node_t node,int s){
     }
   }
 
-  if(s==1){
-    // ident+expr int+expr expr+ident expr+int expr+expr
+  if(s == 1){
+    //ident+expr int+expr expr+ident expr+int expr+expr
     if(node->opr[0]->nature == NODE_IDENT){
       if(node->opr[1]->nature != NODE_IDENT && node->opr[1]->nature != NODE_INTVAL){
-        // ident+expr
+        //ident+expr
         num_reg_1 = get_current_reg();
         allocate_reg();
         num_reg_2 = get_current_reg();
@@ -482,7 +482,7 @@ void asm_NODE_arithOpr(node_t node,int s){
     }
     else if(node->opr[0]->nature==NODE_INTVAL){
       if(node->opr[1]->nature != NODE_IDENT && node->opr[1]->nature != NODE_INTVAL){
-        // int+expr
+        //int+expr
         num_reg_1=get_current_reg();
         allocate_reg();
         num_reg_2=get_current_reg();
@@ -521,8 +521,8 @@ void asm_NODE_arithOpr(node_t node,int s){
   }
 }
 
-void asm_switch_arithOpr(node_t node, int32_t num_reg_1, int32_t num_reg_2){
-  switch(node->nature){
+void asm_switch_arithOpr(node_t node, int32_t num_reg_1, int32_t num_reg_2) {
+  switch(node->nature) {
     case NODE_PLUS:
       create_addu_inst(num_reg_1, num_reg_1, num_reg_2);
 
@@ -535,33 +535,33 @@ void asm_switch_arithOpr(node_t node, int32_t num_reg_1, int32_t num_reg_2){
       create_mflo_inst(num_reg_1);
       break;
     case NODE_DIV:
-      create_teq_inst(0, num_reg_2);  //div error tester
+      create_teq_inst(0, num_reg_2);
       create_div_inst(num_reg_1, num_reg_2);
       create_mflo_inst(num_reg_1);
       break;
     case NODE_MOD:
-    create_teq_inst(0, num_reg_2);  //div error tester
-    create_div_inst(num_reg_1, num_reg_2);
-    create_mfhi_inst(num_reg_1);
+      create_teq_inst(0, num_reg_2);
+      create_div_inst(num_reg_1, num_reg_2);
+      create_mfhi_inst(num_reg_1);
       break;
     case NODE_BAND:
-    create_and_inst(num_reg_1, num_reg_1, num_reg_2);
+      create_and_inst(num_reg_1, num_reg_1, num_reg_2);
       break;
     case NODE_BOR:
-    create_or_inst(num_reg_1, num_reg_1, num_reg_2);
+      create_or_inst(num_reg_1, num_reg_1, num_reg_2);
       break;
     case NODE_BXOR:
-    create_xor_inst(num_reg_1, num_reg_1, num_reg_2);
+      create_xor_inst(num_reg_1, num_reg_1, num_reg_2);
       break;
     case NODE_SLL:
-    create_sllv_inst(num_reg_1, num_reg_1, num_reg_2);
+      create_sllv_inst(num_reg_1, num_reg_1, num_reg_2);
       break;
     case NODE_SRA:
-    create_srav_inst(num_reg_1, num_reg_1, num_reg_2);
-    break;
+      create_srav_inst(num_reg_1, num_reg_1, num_reg_2);
+      break;
     case NODE_SRL:
-    create_srlv_inst(num_reg_1, num_reg_1, num_reg_2);
-    break;
+      create_srlv_inst(num_reg_1, num_reg_1, num_reg_2);
+      break;
   }
 }
 
@@ -814,7 +814,7 @@ void asm_switch_logicalOpr(node_t node, int32_t num_reg_1, int32_t num_reg_2){
   }
 }
 
-// Determiner si la variable est global
+//determiner si la variable est global
 void asm_global_local(node_t node, int32_t num_reg, int s){
   if(s==0){
     if(node->opr[0]->decl_node->global_decl==true){

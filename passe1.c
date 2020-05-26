@@ -33,7 +33,7 @@ void verifs(node_t node) {
           break;
 
         case NODE_FUNC:
-          global=false;
+          global = false;
           reset_env_current_offset();
           reset_temporary_max_offset();
           set_max_registers(nbReg);
@@ -53,6 +53,9 @@ void verifs(node_t node) {
 
         case NODE_STRINGVAL:
           node->offset = add_string(node->str);
+          break;
+
+        default:
           break;
     }
 
@@ -134,7 +137,7 @@ void verifs(node_t node) {
   }
 }
 
-// Declarer ou pas
+// Verifier si le noeud peut etre declarer
 void check_NODE_DECLS(node_t node) {
   if(node->opr[0]->type == TYPE_VOID) {
     sprintf(error_msg, "Unable to define variable of type \"void\"");
@@ -211,43 +214,6 @@ void check_NODE_FUNC(node_t node){
   node->stack_size = node->offset + get_temporary_max_offset();
 }
 
-void push_stack(node_t node){
-  if(node->opr[0]->nature == NODE_IDENT || node->opr[0]->nature == NODE_INTVAL
-    || node->opr[0]->nature == NODE_BOOLVAL) {
-    if(reg_available()) {
-      push_temporary_virtual();
-      nb_temporary++;
-      release_reg();
-      allocate_reg();
-    }
-    else{
-      allocate_reg();
-    }
-  }
-}
-
-void pop_stack() {
-  for(int i = 0; i < nb_temporary; i++) {
-    pop_temporary_virtual();
-  }
-
-  nb_temporary = 0;
-
-  while(get_current_reg() != NUM_ARCH_REGS) {
-    release_reg();
-  }
-}
-
-// Parcours une arbre
-void search_tree(node_t node){
-  if (node->nops > 0) {
-    int i;
-    for (i = 0; i < node->nops; i++) {
-      verifs(node->opr[i]);
-    }
-  }
-}
-
 // Detecter si IDENT est declare
 void check_NODE_IDENT(node_t node) {
   if (strcmp(node->ident, "main")!=0) {
@@ -269,6 +235,7 @@ void check_NODE_IDENT(node_t node) {
   }
 }
 
+// Arithmique binaire
 void check_arithOpr_b(node_t node){
   if(node->opr[0]->type !=TYPE_INT || node->opr[1]->type !=TYPE_INT) {
     sprintf(error_msg, "Arithmetic operators type error.");
@@ -276,6 +243,7 @@ void check_arithOpr_b(node_t node){
   }
 }
 
+// Logique binaire
 void check_logicalOpr_b(node_t node) {
   bool check=false;
   switch(node->opr[0]->type){
@@ -296,6 +264,7 @@ void check_logicalOpr_b(node_t node) {
   }
 }
 
+// Arithmique unaire
 void check_arithOpr_u(node_t node) {
   if(node->opr[0]->type!= TYPE_INT){
     sprintf(error_msg, "Operator type error.");
@@ -303,6 +272,7 @@ void check_arithOpr_u(node_t node) {
   }
 }
 
+// Arithmique unaire
 void check_logicalOpr_u(node_t node) {
   if(node->opr[0]->type!= TYPE_BOOL){
     sprintf(error_msg, "Operator type error.");
@@ -351,5 +321,42 @@ void check_NODE_NODE_DOWHILE(node_t node) {
   if(node->opr[1]->type!=TYPE_BOOL) {
     sprintf(error_msg, "The type of condition in DOWHILE is wrong");
     yyerror(&node, error_msg);
+  }
+}
+
+// Parcours une arbre
+void search_tree(node_t node){
+  if (node->nops > 0) {
+    int i;
+    for (i = 0; i < node->nops; i++) {
+      verifs(node->opr[i]);
+    }
+  }
+}
+
+void push_stack(node_t node){
+  if(node->opr[0]->nature == NODE_IDENT || node->opr[0]->nature == NODE_INTVAL
+    || node->opr[0]->nature == NODE_BOOLVAL) {
+    if(reg_available()) {
+      push_temporary_virtual();
+      nb_temporary++;
+      release_reg();
+      allocate_reg();
+    }
+    else{
+      allocate_reg();
+    }
+  }
+}
+
+void pop_stack() {
+  for(int i = 0; i < nb_temporary; i++) {
+    pop_temporary_virtual();
+  }
+
+  nb_temporary = 0;
+
+  while(get_current_reg() != NUM_ARCH_REGS) {
+    release_reg();
   }
 }
