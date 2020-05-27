@@ -1,2 +1,2 @@
-bool bi = 1;
+int 2a;
 void main(){}

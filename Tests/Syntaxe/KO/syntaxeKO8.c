@@ -1,3 +1,3 @@
 void main(){
-	bool bi = 1;
+	print("a\b");
 }
