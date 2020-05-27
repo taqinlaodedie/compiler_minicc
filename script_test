@@ -1,0 +1,34 @@
+echo Test Syntaxe KO
+for nb in Tests/Syntaxe/KO/*.c; do
+	./minicc $nb -s
+done
+
+echo
+echo Tests Syntaxe OK
+for nb in Tests/Syntaxe/OK/*.c; do
+	./minicc $nb -s
+done
+
+echo
+echo Tests Verif KO
+for nb in Tests/Verif/KO/*.c; do
+	./minicc $nb -v
+done
+
+echo
+echo Tests Verif OK
+for nb in Tests/Verif/OK/*.c; do
+	./minicc $nb -v
+done
+
+echo
+echo Tests Gencode KO
+for nb in Tests/Gencode/KO/*.c; do
+	./minicc $nb
+done
+
+echo
+echo Tests Gencode OK
+for nb in Tests/Gencode/OK/*.c; do
+	./minicc $nb
+done
