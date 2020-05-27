@@ -52,7 +52,7 @@ void asm_gen(node_t node) {
         break;
 
       case NODE_DECL:
-      asm_NODE_DECL(node,0);
+        asm_NODE_DECL(node,0);
         break;
 
       case NODE_IDENT:

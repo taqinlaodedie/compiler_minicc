@@ -138,7 +138,7 @@ int main(int argc, char ** argv) {
     yyparse(&program_root);
     fclose(yyin);
     analyse_tree(program_root);
-    //dump_tree(program_root, "out.dot");
+    dump_tree(program_root, "out.dot");
 
     yylex_destroy();
     return 0;

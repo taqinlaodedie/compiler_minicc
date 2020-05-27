@@ -179,7 +179,7 @@ void check_NODE_DECL(node_t node) {
       node->opr[0]->value = node->opr[1]->value;
     }
     else if(node->opr[1]->nature == NODE_AFFECT) {
-        if(cur_type!=node->opr[1]->opr[1]->type) {
+        if(cur_type != node->opr[1]->opr[1]->type) {
           sprintf(error_msg, "Type mismatch");
           yyerror(&node, error_msg);
         }
@@ -216,7 +216,7 @@ void check_NODE_FUNC(node_t node){
 
 // Detecter si IDENT est declare
 void check_NODE_IDENT(node_t node) {
-  if (strcmp(node->ident, "main")!=0) {
+  if (strcmp(node->ident, "main") != 0) {
     node_t res = (node_t)get_decl_node(node->ident);
     if (res == NULL) {
       sprintf(error_msg, "Variable '%s' not defined", node->ident);
@@ -228,7 +228,7 @@ void check_NODE_IDENT(node_t node) {
     }
   }
   else{
-    if(node->type!=TYPE_VOID){
+    if(node->type != TYPE_VOID){
       sprintf(error_msg, "Unable to define a variable named \"main\"");
       yyerror(&node, error_msg);
     }
@@ -237,7 +237,7 @@ void check_NODE_IDENT(node_t node) {
 
 // Arithmique binaire
 void check_arithOpr_b(node_t node){
-  if(node->opr[0]->type !=TYPE_INT || node->opr[1]->type !=TYPE_INT) {
+  if(node->opr[0]->type != TYPE_INT || node->opr[1]->type != TYPE_INT) {
     sprintf(error_msg, "Arithmetic operators type error.");
     yyerror(&node, error_msg);
   }
@@ -245,15 +245,15 @@ void check_arithOpr_b(node_t node){
 
 // Logique binaire
 void check_logicalOpr_b(node_t node) {
-  bool check=false;
+  bool check = false;
   switch(node->opr[0]->type){
     case TYPE_INT:
-      if(node->opr[1]->type==TYPE_INT)
+      if(node->opr[1]->type == TYPE_INT)
         check=true;
       break;
 
     case TYPE_BOOL:
-      if(node->opr[1]->type==TYPE_BOOL)
+      if(node->opr[1]->type == TYPE_BOOL)
         check=true;
       break;
   }
@@ -266,30 +266,30 @@ void check_logicalOpr_b(node_t node) {
 
 // Arithmique unaire
 void check_arithOpr_u(node_t node) {
-  if(node->opr[0]->type!= TYPE_INT){
-    sprintf(error_msg, "Operator type error.");
+  if(node->opr[0]->type != TYPE_INT){
+    sprintf(error_msg, "Arithmetic operator type error.");
     yyerror(&node, error_msg);
   }
 }
 
 // Arithmique unaire
 void check_logicalOpr_u(node_t node) {
-  if(node->opr[0]->type!= TYPE_BOOL){
-    sprintf(error_msg, "Operator type error.");
+  if(node->opr[0]->type != TYPE_BOOL){
+    sprintf(error_msg, "Logical operator type error.");
     yyerror(&node, error_msg);
   }
 }
 
 
 void check_NODE_AFFECT(node_t node) {
-  if(node->opr[1]->nature!=NODE_AFFECT) {
-    if(node->opr[0]->type!=node->opr[1]->type) {
+  if(node->opr[1]->nature != NODE_AFFECT) {
+    if(node->opr[0]->type != node->opr[1]->type) {
       sprintf(error_msg, "Type mismatch");
       yyerror(&node, error_msg);
     }
   }
   else {
-    if(node->opr[0]->type!=node->opr[1]->opr[1]->type) {
+    if(node->opr[0]->type != node->opr[1]->opr[1]->type) {
       sprintf(error_msg, "Type mismatch");
       yyerror(&node, error_msg);
     }
@@ -297,14 +297,14 @@ void check_NODE_AFFECT(node_t node) {
 }
 
 void check_NODE_IF(node_t node) {
-  if(node->opr[0]->type!=TYPE_BOOL) {
+  if(node->opr[0]->type != TYPE_BOOL) {
     sprintf(error_msg, "The type of condition in IF is wrong");
     yyerror(&node, error_msg);
   }
 }
 
 void check_NODE_WHILE(node_t node) {
-  if(node->opr[0]->type!=TYPE_BOOL) {
+  if(node->opr[0]->type != TYPE_BOOL) {
     sprintf(error_msg, "The type of condition in WHILE is wrong");
     yyerror(&node, error_msg);
   }
